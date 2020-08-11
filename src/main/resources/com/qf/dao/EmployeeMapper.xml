@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.dao.EmployeeMapper">
+    <sql id="table_name">tbl_emp</sql>
+    <sql id="select_fields">
+        emp_id,emp_name,emp_email,gender,department_id
+    </sql>
+    <sql id="select_withdept_fields">
+        emp_id,emp_name,emp_email,gender,department_id,dept_id,dept_name,dept_leader
+    </sql>
+
+    <resultMap id="baseResultMap" type="com.qf.pojo.Employee">
+        <id column="emp_id" property="empId"/>
+        <result column="emp_name" property="empName"/>
+        <result column="emp_email" property="empEmail"/>
+        <result column="gender" property="gender"/>
+        <result column="department_id" property="departmentId"/>
+        <association property="department" javaType="com.qf.pojo.Department">
+            <id column="dept_id" property="deptId"/>
+            <result column="dept_name" property="deptName"/>
+            <result column="dept_leader" property="deptLeader"/>
+        </association>
+    </resultMap>
+    <select id="findAll" resultMap="baseResultMap">
+         select
+           <include refid="select_withdept_fields"/>
+         from
+           tbl_emp e
+         inner join
+           tbl_dept d
+         on e.department_id = d.dept_id
+    </select>
+</mapper>
